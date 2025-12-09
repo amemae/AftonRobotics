@@ -19,7 +19,6 @@ public class HandVisual : MonoBehaviour
     {
         handInput.OnGripChanged -= HandleGripChanged;
     }
-
     private void HandleGripChanged(bool isGripping)
     {
         GetComponent<Renderer>().material.color = isGripping ? grippedColor : notGrippedColor;
