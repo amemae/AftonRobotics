@@ -13,7 +13,7 @@ public class LeverReader : MonoBehaviour
     private float _maxAngle;
 
     public EndpointState LastEndpointReached { get; private set; } = EndpointState.None;
-    public event Action<EndpointState> OnLeverStateChanged;
+    public event Action<EndpointState> OnEndpointChanged;
 
     public float LeverValue
     {
@@ -36,7 +36,7 @@ public class LeverReader : MonoBehaviour
         if (newState != EndpointState.None && newState != LastEndpointReached)
         {
             LastEndpointReached = newState;
-            OnLeverStateChanged?.Invoke(newState);
+            OnEndpointChanged?.Invoke(newState);
         }
     }
 

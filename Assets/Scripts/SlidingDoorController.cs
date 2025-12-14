@@ -18,9 +18,36 @@ public class SlidingDoorController : MonoBehaviour
         _openPos = _closedPos + _openOffset;
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        float leverValNorm = _leverReader.LeverValue;
-        _doorTransform.localPosition = (Vector3.Lerp(_closedPos, _openPos, leverValNorm));
+        _leverReader.OnEndpointChanged += HandleEndpointChanged;
+    }
+
+    private void OnDisable()
+    {
+        _leverReader.OnEndpointChanged -= HandleEndpointChanged;
+    }
+
+    private void HandleEndpointChanged(LeverReader.EndpointState endpointState)
+    {
+        switch (endpointState)
+        {
+            case LeverReader.EndpointState.AtMin:
+                CloseDoor();
+                break;
+            case LeverReader.EndpointState.AtMax:
+                OpenDoor();
+                break;
+        }
+    }
+
+    private void CloseDoor()
+    {
+        _doorTransform.localPosition = _closedPos;
+    }
+
+    private void OpenDoor()
+    {
+        _doorTransform.localPosition = _openPos;
     }
 }
