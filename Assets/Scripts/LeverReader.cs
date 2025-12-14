@@ -1,18 +1,27 @@
+using System;
 using UnityEngine;
 
 public class LeverReader : MonoBehaviour
 {
-    public enum Axis { X, Y, Z };
-
+    public enum EndpointState { AtMin, AtMax, None }
+    private const float ENDPOINT_THRESHOLD = 0.01f;
 
     [SerializeField]
     private HingeJoint _hinge;
 
-    [SerializeField]
-    private Axis _rotationAxis;
-
     private float _minAngle;
     private float _maxAngle;
+
+    public EndpointState LastEndpointReached { get; private set; } = EndpointState.None;
+    public event Action<EndpointState> OnLeverStateChanged;
+
+    public float LeverValue
+    {
+        get
+        {
+            return Mathf.InverseLerp(_minAngle, _maxAngle, _hinge.angle);
+        }
+    }
 
     private void Awake()
     {
@@ -20,39 +29,28 @@ public class LeverReader : MonoBehaviour
         _maxAngle = _hinge.limits.max;
     }
 
-    public float LeverValue
+    private void Update()
     {
-        get
-        {
-            float angle = CalcLeverVal();
+        EndpointState newState = CalcEndpointState(LeverValue);
 
-            if (angle > 180f)
-            {
-                angle -= 360f;
-            }
-            return Mathf.InverseLerp(_minAngle, _maxAngle, angle);
+        if (newState != EndpointState.None && newState != LastEndpointReached)
+        {
+            LastEndpointReached = newState;
+            OnLeverStateChanged?.Invoke(newState);
         }
     }
 
-    private float CalcLeverVal()
+    private EndpointState CalcEndpointState(float leverVal)
     {
-        float val = 0f;
-        Vector3 angles = transform.localEulerAngles;
-
-        //Base the value of rotation on the given _rotationAxis
-        switch (_rotationAxis)
+        if (leverVal <= ENDPOINT_THRESHOLD)
         {
-            case Axis.X:
-                val = angles.x;
-                break;
-            case Axis.Y:
-                val = angles.y;
-                break;
-            case Axis.Z:
-                val = angles.z;
-                break;
+            return EndpointState.AtMin;
+        }
+        else if (leverVal >= 1f - ENDPOINT_THRESHOLD)
+        {
+            return EndpointState.AtMax;
         }
 
-        return val;
+        return EndpointState.None;
     }
 }
