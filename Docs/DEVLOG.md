@@ -7,6 +7,33 @@ This project will be centered on learning how to develop in VR space through a "
 
 *Started On: 12-07-2025*
 
+## 12/14/2025 Pivoting to Levers
+<details>
+<summary><strong>Changed my crank to a lever and opened new doors!</strong></summary>
+
+### What I did
+- Scrapped original crank idea (more on this in today's "Challenges" and "What I learned" sections)
+- Created a working lever with a LeverReader that reads it's angle (relative to its min and max angle) as a value from 0 to 1 using InverseLerp.
+	- I designed the LeverReader to accept a configurable rotation axis, making it simple to read the lever's rotation along whichever axis the lever rotation (Note: So long as that axis is exactly X, Y, or Z. The lever will not currently allow rotation across multiple axes)
+- Created a SlidingDoorController that takes the LeverReader value to inform the door how far it should be slid between open and closed positions.
+
+### Challenges
+- The crank
+	- Rotation around 360 degrees did not work well due to Hinge Joint limitations
+	- This requires more complicated logic that calculates the rotation of the pivot based on the movement of the handle
+- There's a lot to remember, I had to spend some time going back through VR tutorials to remember exactly how grab interactables work
+
+### What I learned
+- Unity's Hinge Joint does not play well with infinite circular rotation. They express a value between -180 and 180 so when a full rotation happens it sees the crank and snapping violently backwards on its hinge causing a jumping effect every full rotation. The crank will require more complicated logic
+
+### Next Steps
+- Change SlidingDoorController to slide the door closed/open when LeverReader is at it's max/min angle
+
+### Future Considerations (Backlog)
+- Allow LeverReader to read across mixed rotation axes, not just full X, Y, and Z
+- Create a working crank to replace the door levers
+</details>
+
 ## 12/08/2025 Devlog Setup + Initial Project
 <details>
 <summary><strong>Started this log and learned a lot about VR development</strong></summary>
@@ -43,3 +70,4 @@ This project will be centered on learning how to develop in VR space through a "
 	- Add collider for grabbing the handle
 	- Add collider for the crank to keep it on top of the table
 	- Make the crank rotate with player movement
+</details>
