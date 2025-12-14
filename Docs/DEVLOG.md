@@ -15,7 +15,7 @@ This project will be centered on learning how to develop in VR space through a "
 - Scrapped original crank idea (more on this in today's "Challenges" and "What I learned" sections)
 - Created a working lever with a LeverReader that reads it's angle (relative to its min and max angle) as a value from 0 to 1 using InverseLerp.
 	- I designed the LeverReader to accept a configurable rotation axis, making it simple to read the lever's rotation along whichever axis the lever rotation (Note: So long as that axis is exactly X, Y, or Z. The lever will not currently allow rotation across multiple axes)
-- Created a SlidingDoorController that takes the LeverReader value to inform the door how far it should be slid between open and closed positions.
+- Created a SlidingDoorController that takes the last endpoint reached by LeverReader to determine whether to close or open the door
 
 ### Challenges
 - The crank
@@ -31,6 +31,7 @@ This project will be centered on learning how to develop in VR space through a "
 
 ### Future Considerations (Backlog)
 - Allow LeverReader to read across mixed rotation axes, not just full X, Y, and Z
+- Add animation to SlidingDoor so it actually slides rather then teleporting
 - Create a working crank to replace the door levers
 </details>
 

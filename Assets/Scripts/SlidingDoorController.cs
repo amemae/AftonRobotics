@@ -11,9 +11,16 @@ public class SlidingDoorController : MonoBehaviour
 
     private Vector3 _openPos;
     private Vector3 _closedPos;
+    private bool _isClosed;
+
+    public bool IsClosed
+    {
+        get { return _isClosed; } 
+    }
 
     private void Start()
     {
+        _isClosed = true;
         _closedPos = _doorTransform.localPosition;
         _openPos = _closedPos + _openOffset;
     }
@@ -43,11 +50,13 @@ public class SlidingDoorController : MonoBehaviour
 
     private void CloseDoor()
     {
+        _isClosed = true;
         _doorTransform.localPosition = _closedPos;
     }
 
     private void OpenDoor()
     {
+        _isClosed = false;
         _doorTransform.localPosition = _openPos;
     }
 }
