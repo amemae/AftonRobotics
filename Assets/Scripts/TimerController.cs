@@ -6,39 +6,32 @@ public class TimerController : MonoBehaviour
 {
     [SerializeField]
     private TextMeshPro _tmp;
+    [SerializeField]
+    private GameTimeController _gtc;
 
-    private int _startingSeconds = 60;
+    private int _startingSeconds;
     private int _secondsRemaining;
     private float _accumulatedDeltaTime;
 
     private void Start()
     {
-        _secondsRemaining = _startingSeconds;
-        UpdateTimerText();
+        _startingSeconds = _gtc.TotalLevelTime;
+        UpdateDisplay(_startingSeconds);
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (_secondsRemaining <= 0) return;
-
-
-        _accumulatedDeltaTime += Time.deltaTime;
-
-        if (_accumulatedDeltaTime >= 1f)
-        {
-            _accumulatedDeltaTime -= 1f;
-            --_secondsRemaining;
-
-            if (_secondsRemaining < 0)
-            {
-                _secondsRemaining = 0;
-            }
-            UpdateTimerText();
-        }
+        _gtc.OnSecondChanged += UpdateDisplay;
     }
 
-    private void UpdateTimerText()
+    private void OnDisable()
     {
-        _tmp.text = _secondsRemaining.ToString("00");
+        _gtc.OnSecondChanged -= UpdateDisplay;
+    }
+
+    private void UpdateDisplay(int secondsIntoLevel)
+    {
+        int secondsRemaining = _gtc.TotalLevelTime - secondsIntoLevel;
+        _tmp.text = secondsRemaining.ToString("00");
     }
 }

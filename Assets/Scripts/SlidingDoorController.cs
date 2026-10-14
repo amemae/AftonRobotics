@@ -3,14 +3,17 @@ using UnityEngine;
 public class SlidingDoorController : MonoBehaviour
 {
     [SerializeField]
-    private LeverReader _leverReader;
-    [SerializeField]
     private Transform _doorTransform;
     [SerializeField]
     private Vector3 _openOffset;
+    [SerializeField]
+    private float _moveDur = 0.5f;
 
     private Vector3 _openPos;
     private Vector3 _closedPos;
+    private Vector3 _tarPos;
+    private float _moveElapsed;
+    private bool _isMoving = false;
     private bool _isClosed;
 
     public bool IsClosed
@@ -25,36 +28,13 @@ public class SlidingDoorController : MonoBehaviour
         _openPos = _closedPos + _openOffset;
     }
 
-    private void OnEnable()
-    {
-        _leverReader.OnEndpointChanged += HandleEndpointChanged;
-    }
-
-    private void OnDisable()
-    {
-        _leverReader.OnEndpointChanged -= HandleEndpointChanged;
-    }
-
-    private void HandleEndpointChanged(LeverReader.EndpointState endpointState)
-    {
-        switch (endpointState)
-        {
-            case LeverReader.EndpointState.AtMin:
-                CloseDoor();
-                break;
-            case LeverReader.EndpointState.AtMax:
-                OpenDoor();
-                break;
-        }
-    }
-
-    private void CloseDoor()
+    public void CloseDoor()
     {
         _isClosed = true;
         _doorTransform.localPosition = _closedPos;
     }
 
-    private void OpenDoor()
+    public void OpenDoor()
     {
         _isClosed = false;
         _doorTransform.localPosition = _openPos;
